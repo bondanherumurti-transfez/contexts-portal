@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>contextus portal — lo-fi wireframes v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; color-scheme: light; }
+body { font-family: 'DM Sans', sans-serif; color: #000; background: #fff; font-size: 15px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+::selection { background: #000; color: #fff; }
+
+.page { max-width: 980px; margin: 0 auto; padding: 3rem 1.5rem 6rem; }
+
+/* ── Header ── */
+.doc-header { padding-bottom: 2.5rem; border-bottom: 0.5px solid #e0e0e0; margin-bottom: 3rem; }
+.doc-header .logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+.doc-header .logo-row svg { display: block; }
+.doc-header .logo-row span { font-size: 20px; font-weight: 500; letter-spacing: -0.5px; }
+.doc-header h1 { font-size: 28px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+.doc-header .subtitle { color: #444; margin-bottom: 1rem; }
+.doc-header .meta { font-family: 'DM Mono', monospace; font-size: 12px; color: #888; letter-spacing: 0.5px; }
+
+/* ── TOC ── */
+.toc { margin: 2rem 0 3rem; }
+.toc-title { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 0.75rem; }
+.toc a { display: flex; align-items: baseline; gap: 14px; font-size: 14px; color: #444; text-decoration: none; padding: 5px 0; transition: color 0.15s; }
+.toc a:hover { color: #000; }
+.toc a .num { font-family: 'DM Mono', monospace; color: #bbb; font-size: 11px; flex-shrink: 0; min-width: 22px; }
+.toc a .desc { color: #888; font-size: 12px; margin-left: auto; }
+
+/* ── Section intro ── */
+.intro { background: #fafafa; border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 18px 22px; margin-bottom: 2.5rem; }
+.intro p { color: #444; font-size: 14px; margin-bottom: 0.5rem; line-height: 1.7; }
+.intro p:last-child { margin-bottom: 0; }
+.intro strong { color: #000; font-weight: 500; }
+
+/* ── Wireframe block ── */
+.wf-section { margin-bottom: 4rem; padding-top: 1rem; }
+.wf-id { font-family: 'DM Mono', monospace; font-size: 11px; color: #bbb; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+.wf-title { font-size: 20px; font-weight: 500; letter-spacing: -0.3px; margin-bottom: 6px; }
+.wf-desc { font-size: 14px; color: #444; margin-bottom: 18px; line-height: 1.7; }
+.wf-frame { border: 0.5px solid #e0e0e0; border-radius: 8px; overflow: hidden; background: #fff; }
+.wf-foot { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; margin-top: 12px; padding: 8px 12px; background: #fafafa; border-radius: 4px; line-height: 1.6; }
+.wf-foot strong { color: #000; font-weight: 500; }
+
+/* ─────────────────────────────────────────────────── */
+/* Wireframe internals (ported from show_widget calls) */
+/* ─────────────────────────────────────────────────── */
+
+.app { display: flex; min-height: 460px; }
+.sb { width: 150px; padding: 14px 12px; border-right: 0.5px solid #e0e0e0; background: #f0f0f0; display: flex; flex-direction: column; gap: 16px; }
+.sb-logo { height: 22px; width: 90px; background: #e0e0e0; border-radius: 4px; }
+.sb-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.sb-item { padding: 6px 10px; font-size: 12px; color: #444; border-radius: 4px; }
+.sb-item.on { background: #fff; color: #000; }
+.sb-item.dis { color: #888; opacity: 0.5; }
+.sb-user { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #888; }
+.av { width: 22px; height: 22px; border-radius: 50%; background: #e0e0e0; }
+.mn { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.tb { height: 38px; padding: 0 14px; display: flex; align-items: center; gap: 12px; border-bottom: 0.5px solid #e0e0e0; font-size: 12px; color: #444; }
+.tb .r { margin-left: auto; color: #888; font-family: 'DM Mono', monospace; font-size: 11px; }
+.cnt { padding: 16px; flex: 1; min-width: 0; }
+
+/* ── Login ── */
+.login { min-height: 420px; display: flex; align-items: center; justify-content: center; background: #f0f0f0; }
+.lc { background: #fff; border: 0.5px solid #e0e0e0; border-radius: 12px; padding: 32px; width: 320px; text-align: center; }
+.lc-logo { display: flex; justify-content: center; margin-bottom: 20px; }
+.lc-mark { width: 36px; height: 36px; border-radius: 8px; background: #000; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 22px; }
+.lc-t { font-size: 15px; margin-bottom: 4px; color: #000; font-weight: 500; }
+.lc-s { font-size: 12px; color: #888; margin-bottom: 24px; }
+.btn-g { height: 38px; border: 0.5px solid #888; border-radius: 4px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px; color: #000; cursor: default; }
+.gm { width: 16px; height: 16px; background: #e0e0e0; border-radius: 2px; }
+.lc-ft { margin-top: 22px; font-size: 11px; color: #888; }
+
+/* ── Inbox split ── */
+.split { display: flex; flex: 1; min-height: 0; }
+.split-l { width: 260px; border-right: 0.5px solid #e0e0e0; display: flex; flex-direction: column; min-width: 0; }
+.split-r { flex: 1; padding: 14px; min-width: 0; }
+.lsearch { padding: 10px 12px; border-bottom: 0.5px solid #e0e0e0; }
+.search { height: 28px; background: #f0f0f0; border-radius: 4px; }
+.lrow { padding: 11px 14px; border-bottom: 0.5px solid #e0e0e0; display: flex; flex-direction: column; gap: 5px; }
+.lrow.on { background: #f0f0f0; }
+.lrow-top { display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
+.lrow-name { font-weight: 500; color: #000; }
+.lrow-time { color: #888; font-size: 11px; }
+.lrow-prev { font-size: 11px; color: #888; }
+.lrow-tags { display: flex; gap: 5px; }
+.tg { font-size: 10px; padding: 2px 7px; border-radius: 8px; background: #e0e0e0; color: #444; }
+.tg.q { background: #000; color: #fff; }
+
+/* ── Detail right pane ── */
+.dh { font-size: 11px; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; font-family: 'DM Mono', monospace; }
+.dr { display: flex; gap: 10px; font-size: 12px; padding: 4px 0; }
+.dk { width: 70px; color: #888; font-size: 11px; flex-shrink: 0; }
+.dv { color: #444; }
+.tx { background: #f0f0f0; border-radius: 4px; padding: 10px; max-height: 150px; overflow: hidden; margin-top: 12px; }
+.msg { display: flex; margin-bottom: 6px; }
+.msg.u { justify-content: flex-end; }
+.msg-b { padding: 5px 10px; border-radius: 8px; font-size: 11px; max-width: 75%; }
+.msg.u .msg-b { background: #111; color: #fff; }
+.msg.b .msg-b { background: #fff; color: #444; border: 0.5px solid #e0e0e0; }
+
+/* ── No-brief panel ── */
+.no-brief { padding: 14px 16px; background: #f0f0f0; border-radius: 4px; margin-top: 12px; text-align: center; }
+.no-brief-t { font-size: 12px; color: #444; margin-bottom: 4px; font-weight: 500; }
+.no-brief-d { font-size: 11px; color: #888; line-height: 1.6; }
+
+/* ── KB tabs ── */
+.tabs { display: flex; gap: 2px; padding: 4px 14px 0; border-bottom: 0.5px solid #e0e0e0; }
+.tab { padding: 7px 12px; font-size: 12px; color: #888; border-bottom: 1.5px solid transparent; }
+.tab.on { color: #000; border-bottom-color: #000; }
+
+/* ── KB sections ── */
+.sec { margin-bottom: 22px; }
+.sec-h-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.sec-h { font-size: 13px; font-weight: 500; color: #000; }
+.sec-d { font-size: 12px; color: #888; margin-bottom: 12px; line-height: 1.6; }
+.btx { padding: 5px 12px; border: 0.5px solid #888; border-radius: 4px; font-size: 11px; color: #444; background: transparent; }
+.btx.solid { background: #000; color: #fff; border-color: #000; }
+.fld { margin-bottom: 10px; }
+.fld-l { font-size: 11px; color: #888; margin-bottom: 4px; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+.inp { height: 30px; background: #f0f0f0; border-radius: 4px; padding: 0 12px; font-size: 12px; display: flex; align-items: center; color: #444; }
+.ta { background: #f0f0f0; border-radius: 4px; padding: 10px 12px; font-size: 12px; min-height: 56px; color: #444; line-height: 1.6; }
+
+/* ── KB profile rows ── */
+.kv-row { display: flex; gap: 14px; padding: 7px 0; border-bottom: 0.5px solid #e0e0e0; font-size: 12px; }
+.kv-k { width: 90px; color: #888; font-size: 11px; flex-shrink: 0; font-family: 'DM Mono', monospace; }
+.kv-v { color: #444; flex: 1; }
+
+/* ── Gap card ── */
+.gap-card { padding: 12px 14px; background: #f0f0f0; border-radius: 4px; margin-bottom: 7px; }
+.gap-t { font-size: 12px; color: #000; margin-bottom: 5px; font-weight: 500; }
+.gap-d { font-size: 11px; color: #888; margin-bottom: 9px; }
+.gap-cta { font-size: 11px; color: #444; font-family: 'DM Mono', monospace; }
+
+/* ── Q&A list ── */
+.qa-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 10px; }
+.qa { padding: 12px 14px; border: 0.5px solid #e0e0e0; border-radius: 4px; }
+.qa-q { font-size: 12px; color: #000; margin-bottom: 5px; font-weight: 500; }
+.qa-a { font-size: 12px; color: #444; line-height: 1.6; }
+
+/* ── Pills editor ── */
+.pill-edit { display: flex; flex-direction: column; gap: 7px; }
+.pill-fld { display: flex; gap: 10px; align-items: center; }
+.pill-num { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; width: 16px; flex-shrink: 0; }
+.preview { padding: 14px; background: #f0f0f0; border-radius: 8px; margin-top: 12px; }
+.pv-fab { display: flex; align-items: flex-end; gap: 10px; }
+.pv-bubbles { display: flex; flex-direction: column; gap: 5px; align-items: flex-end; flex: 1; }
+.pv-bubble { font-size: 11px; padding: 5px 12px; background: #fff; border-radius: 14px; border: 0.5px solid #e0e0e0; color: #444; }
+.pv-fab-circle { width: 32px; height: 32px; border-radius: 50%; background: #000; flex-shrink: 0; }
+
+.char-count { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; text-align: right; margin-top: 5px; }
+.warn { padding: 12px 14px; background: #f0f0f0; border-radius: 4px; font-size: 11px; color: #444; line-height: 1.7; margin-top: 12px; }
+.foot-meta { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; margin-top: 16px; padding-top: 12px; border-top: 0.5px solid #e0e0e0; }
+
+/* ── Empty states ── */
+.empty { flex: 1; display: flex; align-items: center; justify-content: center; padding: 36px; }
+.empty-card { max-width: 420px; text-align: center; }
+.empty-icon { width: 40px; height: 40px; margin: 0 auto 18px; border: 0.5px solid #888; border-radius: 50%; }
+.empty-t { font-size: 15px; font-weight: 500; color: #000; margin-bottom: 8px; }
+.empty-d { font-size: 13px; color: #444; line-height: 1.7; margin-bottom: 18px; }
+.empty-meta { font-family: 'DM Mono', monospace; font-size: 11px; color: #888; margin-top: 18px; padding-top: 14px; border-top: 0.5px solid #e0e0e0; }
+.snippet { background: #f0f0f0; border-radius: 4px; padding: 12px 14px; font-family: 'DM Mono', monospace; font-size: 11px; color: #444; text-align: left; line-height: 1.7; word-break: break-all; margin-bottom: 8px; }
+
+/* ── Sites cards ── */
+.sc { border: 0.5px solid #e0e0e0; border-radius: 8px; padding: 14px; margin-bottom: 12px; }
+.sc-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 14px; }
+.sc-n { font-size: 13px; font-weight: 500; color: #000; }
+.sc-u { font-size: 11px; color: #888; margin-top: 3px; }
+.sn { background: #f0f0f0; border-radius: 4px; padding: 10px 12px; font-family: 'DM Mono', monospace; font-size: 11px; color: #444; overflow: hidden; }
+.bt { padding: 6px 12px; border: 0.5px solid #888; border-radius: 4px; font-size: 11px; color: #444; flex-shrink: 0; }
+.li-add { padding: 9px 12px; border: 0.5px dashed #888; border-radius: 4px; font-size: 12px; color: #888; text-align: center; margin-top: 8px; }
+
+/* ── Modal ── */
+.modal-bg { min-height: 420px; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; padding: 20px; }
+.modal { background: #fff; border-radius: 12px; padding: 24px; width: 420px; border: 0.5px solid #e0e0e0; }
+.modal-h { font-size: 14px; font-weight: 500; margin-bottom: 5px; color: #000; }
+.modal-d { font-size: 12px; color: #888; margin-bottom: 18px; line-height: 1.6; }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
+.modal-warn { font-size: 11px; color: #444; padding: 10px 12px; background: #f0f0f0; border-radius: 4px; margin-bottom: 14px; line-height: 1.6; }
+
+/* ── Logo mark inline ── */
+.logo-mark-sm { width: 22px; height: 22px; border-radius: 4px; background: #000; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 14px; }
+
+/* ── Responsive ── */
+@media (max-width: 720px) {
+  .app { flex-direction: column; min-height: auto; }
+  .sb { width: 100%; flex-direction: row; gap: 12px; align-items: center; padding: 10px 12px; border-right: none; border-bottom: 0.5px solid #e0e0e0; }
+  .sb-nav { flex-direction: row; flex: 1; overflow-x: auto; }
+  .sb-logo { flex-shrink: 0; }
+  .split { flex-direction: column; }
+  .split-l { width: 100%; border-right: none; border-bottom: 0.5px solid #e0e0e0; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── Document Header ── -->
+<div class="doc-header">
+  <div class="logo-row">
+    <svg width="32" height="32" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="#000"/><text x="32" y="32" text-anchor="middle" dominant-baseline="central" font-family="'DM Sans',sans-serif" font-size="34" font-weight="700" fill="#fff">C</text></svg>
+    <span>contextus</span>
+  </div>
+  <h1>Portal — Lo-Fi Wireframes</h1>
+  <p class="subtitle">v1 design reference for the contextus client portal. Used as the canonical visual source by Claude Code agents implementing the frontend and backend.</p>
+  <div class="meta">VERSION 1.0 &middot; APRIL 2026 &middot; INTERNAL</div>
+</div>
+
+<!-- ── Intro ── -->
+<div class="intro">
+  <p><strong>What this is.</strong> Ten lo-fi wireframes covering every screen and state in the contextus portal v1. Grayscale, no real copy, no icons — the point is layout and information density, not pixel polish.</p>
+  <p><strong>How to use it.</strong> Each wireframe is annotated with the endpoints that feed it (see <code>BACKEND-SPEC-PORTAL-V1.md</code>) and the route it lives at (see <code>FRONTEND-SPEC-PORTAL-V1.md</code>). Implementation agents reference these wireframes during PR work. Do not redesign — port these layouts using the brand tokens from <code>contextus-widget-design-guideline.html</code>.</p>
+  <p><strong>Out of scope for v1.</strong> Analytics tab is sidebar-disabled. Self-serve site creation, recrawl, and Q&amp;A edit/delete are deferred to v2.</p>
+</div>
+
+<!-- ── TOC ── -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <a href="#wf-01"><span class="num">01</span><span>Login</span><span class="desc">Google OAuth entry point</span></a>
+  <a href="#wf-02"><span class="num">02</span><span>Inbox — split pane</span><span class="desc">Sessions list + transcript</span></a>
+  <a href="#wf-03"><span class="num">03</span><span>Knowledge base — Knowledge tab</span><span class="desc">Profile + enrichment Q&amp;A</span></a>
+  <a href="#wf-04"><span class="num">04</span><span>Knowledge base — Engagement tab</span><span class="desc">Greeting + quick reply pills</span></a>
+  <a href="#wf-05"><span class="num">05</span><span>Knowledge base — Behavior tab</span><span class="desc">Custom instructions textarea</span></a>
+  <a href="#wf-06"><span class="num">06</span><span>Sites</span><span class="desc">Site cards + embed snippet</span></a>
+  <a href="#wf-07"><span class="num">07</span><span>First-time user empty state</span><span class="desc">No site connected yet</span></a>
+  <a href="#wf-08"><span class="num">08</span><span>Inbox empty state</span><span class="desc">Site live, zero conversations</span></a>
+  <a href="#wf-09"><span class="num">09</span><span>Conversation detail — no brief</span><span class="desc">Unqualified or out-of-scope variant</span></a>
+  <a href="#wf-10"><span class="num">10</span><span>Add Q&amp;A modal</span><span class="desc">Triggered from Knowledge tab</span></a>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 01 — LOGIN -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-01">
+  <div class="wf-id">Wireframe 01</div>
+  <div class="wf-title">Login</div>
+  <p class="wf-desc">Single centered card. One action: continue with Google. Already-authenticated users redirect immediately to /inbox without seeing this screen.</p>
+  <div class="wf-frame">
+    <div class="login">
+      <div class="lc">
+        <div class="lc-logo"><div class="lc-mark">C</div></div>
+        <div class="lc-t">contextus portal</div>
+        <div class="lc-s">manage your widgets and leads</div>
+        <div class="btn-g"><div class="gm"></div><span>continue with google</span></div>
+        <div class="lc-ft">terms · privacy</div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /login &nbsp;·&nbsp; <strong>Endpoints:</strong> GET /api/auth/google/start (initiates OAuth) &nbsp;·&nbsp; <strong>State:</strong> redirects to /inbox if useCurrentUser succeeds</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 02 — INBOX SPLIT PANE -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-02">
+  <div class="wf-id">Wireframe 02</div>
+  <div class="wf-title">Inbox — split pane (populated)</div>
+  <p class="wf-desc">Default state when sessions exist and one is selected. Left: filterable list of conversations with tag chips for qualification + score. Right: brief panel (key/value rows) above scrollable transcript. URL drives selection so refresh and shareable links work.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item on">inbox</div>
+          <div class="sb-item">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span><span class="r">filters · sort · export</span></div>
+        <div class="split">
+          <div class="split-l">
+            <div class="lsearch"><div class="search"></div></div>
+            <div class="lrow on">
+              <div class="lrow-top"><div class="lrow-name">budi santoso</div><div class="lrow-time">2h</div></div>
+              <div class="lrow-prev">restaurant chain, 3 outlets</div>
+              <div class="lrow-tags"><span class="tg q">qualified</span><span class="tg">high</span></div>
+            </div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">sari wijaya</div><div class="lrow-time">5h</div></div>
+              <div class="lrow-prev">tax filing, fashion shop</div>
+              <div class="lrow-tags"><span class="tg q">qualified</span><span class="tg">medium</span></div>
+            </div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">anonymous</div><div class="lrow-time">1d</div></div>
+              <div class="lrow-prev">price comparison only</div>
+              <div class="lrow-tags"><span class="tg">unclear</span></div>
+            </div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">putra hadi</div><div class="lrow-time">2d</div></div>
+              <div class="lrow-prev">payroll for 50 employees</div>
+              <div class="lrow-tags"><span class="tg q">qualified</span><span class="tg">high</span></div>
+            </div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">— spam —</div><div class="lrow-time">3d</div></div>
+              <div class="lrow-prev">crypto promotion</div>
+              <div class="lrow-tags"><span class="tg">out_of_scope</span></div>
+            </div>
+          </div>
+          <div class="split-r">
+            <div class="dh">brief</div>
+            <div class="dr"><div class="dk">who</div><div class="dv">restaurant owner</div></div>
+            <div class="dr"><div class="dk">need</div><div class="dv">monthly bookkeeping + tax</div></div>
+            <div class="dr"><div class="dk">signals</div><div class="dv">budget, timeline this month</div></div>
+            <div class="dr"><div class="dk">contact</div><div class="dv">budi@example.com</div></div>
+            <div class="dr"><div class="dk">score</div><div class="dv">high · qualified</div></div>
+            <div class="tx">
+              <div class="msg u"><div class="msg-b">do you handle restaurants?</div></div>
+              <div class="msg b"><div class="msg-b">yes, several F&amp;B businesses...</div></div>
+              <div class="msg u"><div class="msg-b">we have 3 outlets...</div></div>
+              <div class="msg b"><div class="msg-b">got it. for 3 outlets we typically...</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /inbox?session=sess_xxx &nbsp;·&nbsp; <strong>Endpoints:</strong> GET /api/portal/sessions, GET /api/portal/sessions/{id}</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 03 — KB KNOWLEDGE -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-03">
+  <div class="wf-id">Wireframe 03</div>
+  <div class="wf-title">Knowledge base — Knowledge tab</div>
+  <p class="wf-desc">Read-only profile (extracted by the crawler, edited indirectly via enrichment) + a "gaps" section (only renders when crawler-detected gaps exist) + the user's added Q&amp;A list. Recrawl is a "request" link, not self-serve.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item">inbox</div>
+          <div class="sb-item on">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span><span class="r">last crawled apr 12 · 12 pages</span></div>
+        <div class="tabs">
+          <div class="tab on">knowledge</div>
+          <div class="tab">engagement</div>
+          <div class="tab">behavior</div>
+        </div>
+        <div class="cnt">
+          <div class="sec">
+            <div class="sec-h-row">
+              <div class="sec-h">profile</div>
+              <div class="btx">request recrawl</div>
+            </div>
+            <div class="sec-d">extracted from your site. recrawl to refresh after site changes.</div>
+            <div class="kv-row"><div class="kv-k">name</div><div class="kv-v">finfloo</div></div>
+            <div class="kv-row"><div class="kv-k">industry</div><div class="kv-v">bookkeeping &amp; tax services</div></div>
+            <div class="kv-row"><div class="kv-k">services</div><div class="kv-v">monthly bookkeeping · tax filing · payroll · audit</div></div>
+            <div class="kv-row"><div class="kv-k">out of scope</div><div class="kv-v">investment advisory · legal advice</div></div>
+            <div class="kv-row"><div class="kv-k">summary</div><div class="kv-v" style="line-height: 1.6;">indonesian SMB bookkeeping firm offering monthly recording, tax filing (PPh &amp; PPN), and payroll for businesses with 1–100 employees...</div></div>
+          </div>
+          <div class="sec">
+            <div class="sec-h-row">
+              <div class="sec-h">gaps the AI doesn't know yet</div>
+            </div>
+            <div class="sec-d">our crawler noticed these are missing. answering them teaches the AI.</div>
+            <div class="gap-card">
+              <div class="gap-t">no pricing page found</div>
+              <div class="gap-d">visitors will ask. add a Q&amp;A so the AI can respond.</div>
+              <div class="gap-cta">+ answer this</div>
+            </div>
+            <div class="gap-card">
+              <div class="gap-t">no contact details for support</div>
+              <div class="gap-d">whatsapp number, response time, hours.</div>
+              <div class="gap-cta">+ answer this</div>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec-h-row">
+              <div class="sec-h">your added knowledge</div>
+              <div class="btx solid">+ add Q&amp;A</div>
+            </div>
+            <div class="sec-d">questions you've answered manually. these are added to the AI's context.</div>
+            <div class="qa-list">
+              <div class="qa">
+                <div class="qa-q">what's your whatsapp contact?</div>
+                <div class="qa-a">wa.me/628123456789 — response within 1 business hour</div>
+              </div>
+              <div class="qa">
+                <div class="qa-q">do you offer investment advisory?</div>
+                <div class="qa-a">no, we only provide bookkeeping and tax services. for investment we recommend...</div>
+              </div>
+              <div class="qa">
+                <div class="qa-q">what are your prices for monthly bookkeeping?</div>
+                <div class="qa-a">starts at IDR 2.5M/month for businesses under 100 transactions...</div>
+              </div>
+            </div>
+            <div class="foot-meta">adding a Q&amp;A regenerates your AI's profile · 3 entries · 412 words</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /knowledge-base/knowledge &nbsp;·&nbsp; <strong>Endpoints:</strong> GET /api/portal/kb (read), POST /api/portal/kb/enrich (add Q&amp;A) &nbsp;·&nbsp; <strong>Conditional:</strong> hide "gaps" section when kb.gaps is empty</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 04 — KB ENGAGEMENT -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-04">
+  <div class="wf-id">Wireframe 04</div>
+  <div class="wf-title">Knowledge base — Engagement tab</div>
+  <p class="wf-desc">Greeting message + 3 quick reply pills. Live preview at the bottom shows what visitors see. All fields auto-save on blur with debounce.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item">inbox</div>
+          <div class="sb-item on">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span></div>
+        <div class="tabs">
+          <div class="tab">knowledge</div>
+          <div class="tab on">engagement</div>
+          <div class="tab">behavior</div>
+        </div>
+        <div class="cnt">
+          <div class="sec">
+            <div class="sec-h-row"><div class="sec-h">greeting message</div></div>
+            <div class="sec-d">first thing visitors see. keep it short and conversational.</div>
+            <div class="fld">
+              <div class="fld-l">message</div>
+              <div class="ta">halo, ada yang bisa kami bantu seputar pembukuan atau pajak?</div>
+            </div>
+            <div class="char-count">52 / 200</div>
+          </div>
+          <div class="sec">
+            <div class="sec-h-row"><div class="sec-h">quick reply pills</div></div>
+            <div class="sec-d">3 buttons that appear above the chat. tap to send instantly.</div>
+            <div class="pill-edit">
+              <div class="pill-fld">
+                <div class="pill-num">01</div>
+                <div class="inp" style="flex: 1;">layanan apa yang ditawarkan?</div>
+              </div>
+              <div class="pill-fld">
+                <div class="pill-num">02</div>
+                <div class="inp" style="flex: 1;">berapa biayanya?</div>
+              </div>
+              <div class="pill-fld">
+                <div class="pill-num">03</div>
+                <div class="inp" style="flex: 1;">bagaimana cara mulai?</div>
+              </div>
+            </div>
+          </div>
+          <div class="sec">
+            <div class="sec-h-row"><div class="sec-h">preview</div></div>
+            <div class="sec-d">how this looks on your site.</div>
+            <div class="preview">
+              <div class="pv-fab">
+                <div class="pv-bubbles">
+                  <div class="pv-bubble">layanan apa yang ditawarkan?</div>
+                  <div class="pv-bubble">berapa biayanya?</div>
+                  <div class="pv-bubble">bagaimana cara mulai?</div>
+                </div>
+                <div class="pv-fab-circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /knowledge-base/engagement &nbsp;·&nbsp; <strong>Endpoints:</strong> PATCH /api/portal/kb/pills, PATCH /api/portal/kb/greeting</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 05 — KB BEHAVIOR -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-05">
+  <div class="wf-id">Wireframe 05</div>
+  <div class="wf-title">Knowledge base — Behavior tab</div>
+  <p class="wf-desc">Custom instructions textarea (additive layer on top of the contextus engagement model — does not replace it). Examples block only renders when textarea is empty. Footer warn box reinforces that contextus continues to tune the base agent.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item">inbox</div>
+          <div class="sb-item on">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span></div>
+        <div class="tabs">
+          <div class="tab">knowledge</div>
+          <div class="tab">engagement</div>
+          <div class="tab on">behavior</div>
+        </div>
+        <div class="cnt">
+          <div class="sec">
+            <div class="sec-h-row">
+              <div class="sec-h">custom instructions</div>
+              <div class="btx">reset to default</div>
+            </div>
+            <div class="sec-d">tell the AI how to behave. these add to the default agent — they don't replace it.</div>
+            <div class="ta" style="min-height: 120px;">always respond in indonesian (bahasa). when visitor mentions urgency around tax deadlines, surface our priority service. don't quote specific prices — direct them to wa.me/628123456789 instead.</div>
+            <div class="char-count">198 / 2000</div>
+          </div>
+          <div class="sec">
+            <div class="sec-h-row"><div class="sec-h">examples</div></div>
+            <div class="sec-d">short directives work better than long paragraphs.</div>
+            <div class="qa-list">
+              <div class="qa">
+                <div class="qa-q">tone</div>
+                <div class="qa-a">be warm but professional. address visitors as "kak" not "anda".</div>
+              </div>
+              <div class="qa">
+                <div class="qa-q">routing</div>
+                <div class="qa-a">if visitor asks about enterprise pricing, ask for company size first.</div>
+              </div>
+              <div class="qa">
+                <div class="qa-q">guardrails</div>
+                <div class="qa-a">never quote prices. always direct pricing questions to whatsapp.</div>
+              </div>
+            </div>
+          </div>
+          <div class="warn">these layer on top of the contextus engagement model. we tune the base agent every few weeks to improve qualification — your instructions stay yours.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /knowledge-base/behavior &nbsp;·&nbsp; <strong>Endpoint:</strong> PATCH /api/portal/kb/custom-instructions &nbsp;·&nbsp; <strong>Conditional:</strong> show "examples" section only when textarea is empty</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 06 — SITES -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-06">
+  <div class="wf-id">Wireframe 06</div>
+  <div class="wf-title">Sites</div>
+  <p class="wf-desc">List of sites linked to this user account. Each card shows name, URL, indexing status, manage button, and the embed snippet ready to copy. "+ add new site" placeholder shows a "contact us" tooltip — no self-serve site creation in v1.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item">inbox</div>
+          <div class="sb-item">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item on">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>your sites</span><span class="r">+ add site</span></div>
+        <div class="cnt">
+          <div class="sc">
+            <div class="sc-hd">
+              <div>
+                <div class="sc-n">finfloo</div>
+                <div class="sc-u">finfloo.com · 12 pages indexed</div>
+              </div>
+              <div class="bt">manage</div>
+            </div>
+            <div class="sn">&lt;script src="https://contextus.dev/widget/floating.js" data-knowledge-base-id="kb_finfloo_xxx"&gt;&lt;/script&gt;</div>
+          </div>
+          <div class="sc">
+            <div class="sc-hd">
+              <div>
+                <div class="sc-n">rubyh</div>
+                <div class="sc-u">rubyh.dev · pending</div>
+              </div>
+              <div class="bt">activate</div>
+            </div>
+            <div class="sn" style="opacity: 0.5;">&lt;script src="https://contextus.dev/widget/floating.js" data-knowledge-base-id="—"&gt;&lt;/script&gt;</div>
+          </div>
+          <div class="li-add">+ add new site</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /sites &nbsp;·&nbsp; <strong>Endpoint:</strong> GET /api/portal/sites</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 07 — FIRST-TIME EMPTY -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-07">
+  <div class="wf-id">Wireframe 07</div>
+  <div class="wf-title">First-time user (no site connected)</div>
+  <p class="wf-desc">Soft empty state. Anyone can sign in via Google, but until Bondan links their account to a site, they land here. No error styling — feels like a soft waitlist confirmation, not a wall. Sidebar items inbox/KB/analytics are visually disabled.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item dis">inbox</div>
+          <div class="sb-item dis">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item on">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>new.user</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>your sites</span></div>
+        <div class="empty">
+          <div class="empty-card">
+            <div class="empty-icon"></div>
+            <div class="empty-t">your account is ready</div>
+            <div class="empty-d">we'll prepare your site and email you when it's live. usually within 1 business day.</div>
+            <div class="empty-d" style="font-size: 12px; color: #888;">in the meantime, feel free to try the demo at getcontextus.dev/try</div>
+            <div class="empty-meta">signed in as new.user@example.com · sign out</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /sites (when sites array is empty) &nbsp;·&nbsp; <strong>Trigger:</strong> GET /api/portal/sites returns []</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 08 — INBOX EMPTY -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-08">
+  <div class="wf-id">Wireframe 08</div>
+  <div class="wf-title">Inbox empty (site live, no conversations yet)</div>
+  <p class="wf-desc">First screen a newly-onboarded customer sees. Ships the embed snippet at the moment of need so they can install the widget without hunting through Settings.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item on">inbox</div>
+          <div class="sb-item">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span><span class="r">0 conversations</span></div>
+        <div class="empty">
+          <div class="empty-card" style="max-width: 480px;">
+            <div class="empty-icon"></div>
+            <div class="empty-t">no conversations yet</div>
+            <div class="empty-d">paste this snippet before <code style="font-family: 'DM Mono', monospace; font-size: 12px;">&lt;/body&gt;</code> on your site to start collecting leads.</div>
+            <div class="snippet">&lt;script src="https://contextus.dev/widget/floating.js"<br/>&nbsp;&nbsp;data-knowledge-base-id="kb_finfloo_xxx"&gt;&lt;/script&gt;</div>
+            <div class="empty-meta">install help · view in sites tab</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /inbox (when sessions array is empty) &nbsp;·&nbsp; <strong>Trigger:</strong> GET /api/portal/sessions returns []</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 09 — CONVERSATION NO BRIEF -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-09">
+  <div class="wf-id">Wireframe 09</div>
+  <div class="wf-title">Conversation detail — no brief generated</div>
+  <p class="wf-desc">Same shell as the populated inbox, but right pane shows session metadata + a "no brief generated" panel + transcript. Covers both "didn't qualify" and "out of scope" qualifications — same shell, status text varies.</p>
+  <div class="wf-frame">
+    <div class="app">
+      <div class="sb">
+        <div class="sb-logo"></div>
+        <div class="sb-nav">
+          <div class="sb-item on">inbox</div>
+          <div class="sb-item">knowledge base</div>
+          <div class="sb-item dis">analytics</div>
+          <div class="sb-item">sites</div>
+        </div>
+        <div class="sb-user"><div class="av"></div><span>bondan</span></div>
+      </div>
+      <div class="mn">
+        <div class="tb"><span>finfloo.com</span><span class="r">filters · sort · export</span></div>
+        <div class="split">
+          <div class="split-l">
+            <div class="lsearch"><div class="search"></div></div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">budi santoso</div><div class="lrow-time">2h</div></div>
+              <div class="lrow-prev">restaurant chain, 3 outlets</div>
+              <div class="lrow-tags"><span class="tg q">qualified</span><span class="tg">high</span></div>
+            </div>
+            <div class="lrow on">
+              <div class="lrow-top"><div class="lrow-name">anonymous</div><div class="lrow-time">1d</div></div>
+              <div class="lrow-prev">price comparison only</div>
+              <div class="lrow-tags"><span class="tg">unclear</span></div>
+            </div>
+            <div class="lrow">
+              <div class="lrow-top"><div class="lrow-name">— spam —</div><div class="lrow-time">3d</div></div>
+              <div class="lrow-prev">crypto promotion</div>
+              <div class="lrow-tags"><span class="tg">out_of_scope</span></div>
+            </div>
+          </div>
+          <div class="split-r">
+            <div class="dh">conversation</div>
+            <div class="dr"><div class="dk">started</div><div class="dv">apr 25, 14:32 · 4 messages</div></div>
+            <div class="dr"><div class="dk">contact</div><div class="dv" style="color: #888;">not captured</div></div>
+            <div class="dr"><div class="dk">status</div><div class="dv">unclear · no brief generated</div></div>
+            <div class="no-brief">
+              <div class="no-brief-t">no lead brief for this conversation</div>
+              <div class="no-brief-d">visitor didn't share enough signals to qualify, or left before completing the chat. transcript still saved below.</div>
+            </div>
+            <div class="tx">
+              <div class="msg b"><div class="msg-b">halo, ada yang bisa kami bantu?</div></div>
+              <div class="msg u"><div class="msg-b">berapa biaya bookkeeping?</div></div>
+              <div class="msg b"><div class="msg-b">untuk pricing kami arahkan ke whatsapp...</div></div>
+              <div class="msg u"><div class="msg-b">ok terima kasih</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Route:</strong> /inbox?session=sess_xxx (when brief is null) &nbsp;·&nbsp; <strong>Trigger:</strong> GET /api/portal/sessions/{id} returns brief: null</div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 10 — ADD QA MODAL -->
+<!-- ══════════════════════════════════════ -->
+<div class="wf-section" id="wf-10">
+  <div class="wf-id">Wireframe 10</div>
+  <div class="wf-title">Add Q&amp;A modal</div>
+  <p class="wf-desc">Triggered from the Knowledge tab — either via "+ add Q&amp;A" or "+ answer this" on a gap card (which pre-fills the question field). Two fields, one warning about regeneration. Matches the additive-only constraint of the enrich endpoint.</p>
+  <div class="wf-frame">
+    <div class="modal-bg">
+      <div class="modal">
+        <div class="modal-h">add a question &amp; answer</div>
+        <div class="modal-d">teach the AI something visitors might ask. this becomes part of the AI's knowledge.</div>
+        <div class="fld">
+          <div class="fld-l">question</div>
+          <div class="inp">what are your prices for monthly bookkeeping?</div>
+        </div>
+        <div class="fld">
+          <div class="fld-l">answer</div>
+          <div class="ta">starts at IDR 2.5M/month for businesses under 100 transactions. enterprise pricing on request — direct visitors to wa.me/628123456789 for a quote.</div>
+        </div>
+        <div class="modal-warn">adding this regenerates your AI's company profile from all knowledge. takes ~10 seconds.</div>
+        <div class="modal-actions">
+          <div class="btx">cancel</div>
+          <div class="btx solid">add to knowledge</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="wf-foot"><strong>Trigger:</strong> "+ add Q&amp;A" or "+ answer this" on /knowledge-base/knowledge &nbsp;·&nbsp; <strong>Endpoint:</strong> POST /api/portal/kb/enrich (rate-limited per user)</div>
+</div>
+
+</div>
+</body>
+</html>
