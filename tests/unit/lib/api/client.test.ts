@@ -150,4 +150,15 @@ describe("apiClient", () => {
       });
     });
   });
+
+  describe("204 handling", () => {
+    it("returns undefined without parsing body on 204", async () => {
+      // FastAPI sends content-type: application/json even on 204 — body is empty
+      vi.stubGlobal("fetch", mockFetch(204, null));
+
+      const result = await apiClient.post("/api/auth/logout");
+
+      expect(result).toBeUndefined();
+    });
+  });
 });

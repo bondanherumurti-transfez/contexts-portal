@@ -42,6 +42,10 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     throw new ApiError(401, { error: "unauthenticated" });
   }
 
+  if (res.status === 204) {
+    return undefined as T;
+  }
+
   let data: unknown;
   const contentType = res.headers.get("content-type") ?? "";
   if (contentType.includes("application/json")) {
