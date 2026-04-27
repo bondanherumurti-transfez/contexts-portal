@@ -49,7 +49,7 @@ pnpm test src/lib/api/client.test.ts
 src/app/
 ├── layout.tsx               # root layout — DM Sans/Mono fonts, QueryProvider
 ├── page.tsx                 # redirects to /inbox (authed) or /login
-├── login/page.tsx           # wireframe 01 — Google OAuth entry
+├── login/page.tsx           # wireframe 01 — Google OAuth entry; ?error=auth_failed shows generic banner, ?error=not_invited shows "contact us" banner
 ├── auth/callback/page.tsx   # OAuth landing — verifies cookie, redirects to /inbox
 └── (authenticated)/         # route group with auth guard layout
     ├── layout.tsx           # sidebar + topbar shell, useCurrentUser guard
@@ -69,6 +69,10 @@ Cookie-based, fully managed by the backend. The frontend never reads or stores t
 Auth guard lives in `src/app/(authenticated)/layout.tsx`: calls `useCurrentUser()`, shows a spinner while loading, redirects to `/login` on 401. Do **not** use Next.js `middleware.ts` for auth — it can't read HTTP-only cookies from a different domain.
 
 Login flow: `window.location.href = "${API_BASE}/api/auth/google/start"` (full-page redirect, not a fetch).
+
+Login error states (query param `?error=`):
+- `auth_failed` — generic OAuth failure or user cancelled the Google consent screen
+- `not_invited` — email not found in pre-seeded users; backend should redirect here instead of creating a new row (invite-only enforcement)
 
 ### API client (`src/lib/api/client.ts`)
 
