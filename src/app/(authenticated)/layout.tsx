@@ -43,7 +43,7 @@ export default function AuthenticatedLayout({
       <Sidebar hasSites={sites.length > 0} />
       <div className="flex flex-col flex-1 min-w-0">
         <Topbar sites={sites} />
-        <main className="flex-1 overflow-auto">
+        <main className="flex flex-col flex-1 overflow-auto">
           {children}
         </main>
       </div>
