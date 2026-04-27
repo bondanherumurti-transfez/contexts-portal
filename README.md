@@ -24,7 +24,7 @@ pnpm test:e2e     # playwright e2e tests
 
 | Variable | Description |
 |---|---|
-| `NEXT_PUBLIC_API_BASE` | Backend API base URL (e.g. `https://contextus-2d16.onrender.com`) |
+| `NEXT_PUBLIC_API_BASE` | Backend API base URL (e.g. `https://backend.backend-development.getcontextus.dev`) |
 
 For local development, set `NEXT_PUBLIC_API_BASE=http://localhost:8000` in `.env.local`.
 

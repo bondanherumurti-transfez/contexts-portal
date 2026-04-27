@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-`contextus-portal` is a Next.js 15 client portal for contextus customers (invite-only, v1). Customers sign in via Google OAuth, then view leads in the inbox, manage their knowledge base, and see their site embed snippet. The backend is a FastAPI app on Render (`https://contextus-2d16.onrender.com`) — this repo is frontend-only.
+`contextus-portal` is a Next.js 15 client portal for contextus customers (invite-only, v1). Customers sign in via Google OAuth, then view leads in the inbox, manage their knowledge base, and see their site embed snippet. The backend is a FastAPI app (`https://backend.backend-development.getcontextus.dev`) — this repo is frontend-only.
 
 Design references: `docs/FRONTEND-SPEC-PORTAL-V1.md`, `docs/BACKEND-SPEC-PORTAL-V1.md`, `docs/contextus-portal-wireframes-v1.html`. These are the source of truth — do not redesign, port from them.
 
@@ -124,7 +124,7 @@ Navigation state lives in the URL, never in React state or localStorage. Selecte
 ### Environment
 
 ```
-NEXT_PUBLIC_API_BASE=https://contextus-2d16.onrender.com  # prod
+NEXT_PUBLIC_API_BASE=https://backend.backend-development.getcontextus.dev  # prod
 NEXT_PUBLIC_API_BASE=http://localhost:8000                  # local dev
 ```
 
