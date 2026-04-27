@@ -19,6 +19,18 @@ vi.mock("@/lib/hooks/useCurrentUser", () => ({
   useCurrentUser: mockUseCurrentUser,
 }));
 
+vi.mock("@/lib/hooks/useSites", () => ({
+  useSites: () => ({ data: undefined }),
+}));
+
+vi.mock("@/components/shell/Sidebar", () => ({
+  Sidebar: () => null,
+}));
+
+vi.mock("@/components/shell/Topbar", () => ({
+  Topbar: () => null,
+}));
+
 import AuthenticatedLayout from "@/app/(authenticated)/layout";
 import { ApiError } from "@/lib/api/client";
 
