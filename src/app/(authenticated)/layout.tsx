@@ -15,8 +15,13 @@ export default function AuthenticatedLayout({
   const { data: user, isLoading, error } = useCurrentUser();
 
   useEffect(() => {
+    if (!error) return;
     if (error instanceof ApiError && error.status === 401) {
       router.replace("/login");
+    } else {
+      // Network error, 5xx, or anything unexpected — backend is broken.
+      // Never grant access silently; send to /oops instead.
+      router.replace("/oops");
     }
   }, [error, router]);
 
