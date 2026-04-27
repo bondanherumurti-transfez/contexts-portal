@@ -170,17 +170,40 @@ E2E tests (Playwright): one happy-path test per major flow with mocked backend v
 
 ## Storybook
 
-Storybook 10 (`pnpm storybook`) — visual documentation for reusable components with multiple states.
+Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primary design reference** for this project. Before implementing any UI feature, check the relevant story for the expected layout, states, and props. After implementing or changing a component, update its story to match.
 
-**Setup:** `.storybook/main.ts` (stories glob, `@storybook/nextjs` framework), `.storybook/preview.ts` (global QueryClientProvider decorator with seeded preview user + empty sites, imports `globals.css`), `.storybook/preview-head.html` (Google Fonts for DM Sans/Mono).
+**Setup:** `.storybook/main.ts` (stories glob, `@storybook/nextjs` + `@storybook/addon-docs`), `.storybook/preview.ts` (global `QueryClientProvider` decorator with seeded preview user + empty sites, imports `globals.css`), `.storybook/preview-head.html` (Google Fonts).
 
-**Rule:** only write stories for components with multiple meaningful visual states (e.g. Spinner sizes, Sidebar with/without sites). Skip page-level layouts and pure structural wrappers.
+**Mandatory rules:**
+- Every component with multiple meaningful visual states must have a story. Skip page-level layouts and pure structural wrappers.
+- When you change a component's props, behavior, or visual output — update its `.stories.tsx` to reflect the change. Stories are documentation; stale stories mislead future agents.
+- Every story file must include `parameters.docs.description.component` (component-level description) and JSDoc on every prop in the interface. This is what populates the Docs tab.
+- The global decorator provides `QueryClientProvider` — do not wrap individual stories manually.
+- Use `parameters.nextjs.navigation.pathname` to control the active nav item for `Sidebar` stories.
 
-**Existing stories:**
-- `UI/Spinner` — sm, md, lg sizes
-- `Shell/Sidebar` — with sites (normal), no sites (wireframe 07), active KB, active Sites
+**All current stories:**
 
-**When adding a new story:** use `parameters.nextjs.navigation.pathname` to control the active nav item in Sidebar. The global decorator provides the QueryClientProvider — no need to wrap each story manually.
+| Story path | Component file | Wireframe(s) |
+|---|---|---|
+| `UI/Spinner` | `src/components/ui/Spinner.tsx` | — |
+| `UI/Tag` | `src/components/ui/Tag.tsx` | 02, 09 |
+| `UI/Button` | `src/components/ui/Button.tsx` | 03, 10 |
+| `UI/Tabs` | `src/components/ui/Tabs.tsx` | 03–05 |
+| `UI/EmptyState` | `src/components/ui/EmptyState.tsx` | 07, 08 |
+| `UI/Snippet` | `src/components/ui/Snippet.tsx` | 06, 08 |
+| `UI/KeyValue` | `src/components/ui/KeyValue.tsx` | 03 |
+| `Shell/Sidebar` | `src/components/shell/Sidebar.tsx` | 02–09 |
+| `Inbox/SessionListItem` | `src/components/inbox/SessionListItem.tsx` | 02, 09 |
+| `Inbox/TranscriptMessage` | `src/components/inbox/TranscriptMessage.tsx` | 02, 09 |
+| `Inbox/BriefPanel` | `src/components/inbox/BriefPanel.tsx` | 02 |
+| `Inbox/NoBriefPanel` | `src/components/inbox/NoBriefPanel.tsx` | 09 |
+| `KB/GapCard` | `src/components/kb/GapCard.tsx` | 03 |
+| `KB/QACard` | `src/components/kb/QACard.tsx` | 03, 05 |
+| `KB/WidgetPreview` | `src/components/kb/WidgetPreview.tsx` | 04 |
+| `KB/AddQAModal` | `src/components/kb/AddQAModal.tsx` | 10 |
+| `Sites/SiteCard` | `src/components/sites/SiteCard.tsx` | 06 |
+
+**Docs tab:** each story title maps to a docs URL — e.g. `UI/Button` → `http://localhost:6006/?path=/docs/ui-button--docs`. The docs tab shows the component description, an interactive canvas, the args table with prop descriptions, and all individual stories.
 
 ---
 
