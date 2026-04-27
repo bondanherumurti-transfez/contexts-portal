@@ -3,13 +3,16 @@
 import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { logout } from "@/lib/api/auth";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function InboxPage() {
   const { data: user } = useCurrentUser();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   async function handleSignOut() {
     await logout();
+    queryClient.removeQueries({ queryKey: ["user"] });
     router.replace("/login");
   }
 
