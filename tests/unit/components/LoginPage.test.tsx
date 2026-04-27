@@ -62,6 +62,14 @@ describe("LoginPage", () => {
     expect(screen.queryByText(/sign-in failed/i)).toBeNull();
   });
 
+  it("shows not_invited banner when ?error=not_invited is present", () => {
+    mockUseSearchParams.mockReturnValue(new URLSearchParams("error=not_invited"));
+
+    render(createElement(LoginPage));
+
+    expect(screen.getByText(/hasn't been set up yet/i)).toBeDefined();
+  });
+
   it("google button navigates to OAuth start URL", () => {
     render(createElement(LoginPage));
 

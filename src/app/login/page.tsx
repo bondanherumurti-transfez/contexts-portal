@@ -51,6 +51,11 @@ function LoginContent() {
             sign-in failed — please try again
           </div>
         )}
+        {error === "not_invited" && (
+          <div className="mb-4 px-3 py-2 bg-error-bg text-error-text text-[11px] rounded text-left">
+            your account hasn't been set up yet — contact us to get access
+          </div>
+        )}
 
         <button
           onClick={handleGoogleLogin}
