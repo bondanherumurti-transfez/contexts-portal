@@ -55,7 +55,9 @@ src/app/
 ├── auth/callback/page.tsx   # OAuth landing — verifies cookie, redirects to /inbox
 └── (authenticated)/         # route group with auth guard layout
     ├── layout.tsx           # auth guard (useCurrentUser + useSites) + Sidebar + Topbar shell
-    ├── inbox/page.tsx       # wireframes 02, 08, 09 — split pane (placeholder until PR 5)
+    ├── inbox/
+    │   ├── page.tsx         # Suspense wrapper — required for useSearchParams on direct URL visits
+    │   └── InboxContent.tsx # wireframes 02, 08, 09 — split pane, all three states
     ├── knowledge-base/
     │   ├── layout.tsx       # tabs strip (knowledge / engagement / behavior)
     │   ├── page.tsx         # redirects to /knowledge-base/knowledge
@@ -162,11 +164,22 @@ Validated at boot in `src/lib/env.ts` using zod — fail fast with a clear messa
 
 ---
 
+## Testing rules
+
+**Tests and docs are required before every commit.** Do not push without them.
+
+- For every new feature or significant fix: write vitest unit tests + Playwright e2e tests + update CLAUDE.md.
+- Unit tests live in `tests/unit/`. E2e tests live in `tests/e2e/`.
+- E2e tests mock the backend via `page.route()` — no real server required.
+
 ## Tests
 
-Unit tests (vitest): API client 401 behavior, error parsing, mutation invalidation patterns, form validation schemas, components with logic (`Tag` color per qualification, `Snippet` copy, `WidgetPreview` pill rendering). Skip snapshot tests and pure presentational components.
+Unit tests (vitest): API client 401 behavior, error parsing, mutation invalidation patterns, form validation schemas, components with logic (`Tag` color per qualification, `Snippet` copy, `WidgetPreview` pill rendering), inbox helpers (`relativeTime`, `extractContactValue`). Skip snapshot tests and pure presentational components.
 
-E2E tests (Playwright): one happy-path test per major flow with mocked backend via `page.route`. Stub `/api/auth/me` to simulate authenticated state — no real OAuth in tests.
+E2E tests (Playwright): one happy-path test per major flow with mocked backend via `page.route`. Stub `/api/auth/me` and `/api/portal/sites` to simulate authenticated state — no real OAuth in tests.
+
+- `tests/unit/lib/inbox.test.ts` — `relativeTime`, `extractContactValue` (contact JSON parsing)
+- `tests/e2e/inbox.spec.ts` — session list renders, click session → brief panel, no-brief panel, direct URL visit navigation, empty state
 
 ## Storybook
 
@@ -213,7 +226,7 @@ Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primar
 2. ✅ Auth shell — login page, callback page, API client, auth guard
 3. ✅ Sidebar + topbar shell — nav, user menu, `useSites`, wireframe 07
 4. Sites page — full `SiteCard`, embed snippet (stub exists, needs PR 4 backend)
-5. Inbox page — sessions list, conversation detail, empty state
+5. ✅ Inbox page — sessions list, brief panel, no-brief panel, empty state (wireframes 02, 08, 09)
 6. KB tab read-only — profile, enriched knowledge list
 7. KB write surfaces — Add Q&A modal, pills, greeting, custom instructions editors
 8. Polish — empty/loading/error state audit, accessibility, responsive check
