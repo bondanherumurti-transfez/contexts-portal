@@ -28,9 +28,28 @@ function tagsForSession(item: SessionListItemType): TagVariant[] {
   return tags;
 }
 
+// Backend stores contact as a JSON object string: {"email": null, "phone": "08xxx", "whatsapp": null}
+// Extract the first non-null string value.
+function extractContactValue(raw: string | null): string | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw);
+    if (typeof parsed === "object" && parsed !== null) {
+      for (const val of Object.values(parsed)) {
+        if (val && typeof val === "string") return val;
+      }
+      return null;
+    }
+  } catch {
+    // not JSON — use as-is
+  }
+  return raw;
+}
+
 function sessionName(item: SessionListItemType): string {
   if (item.qualification === "suspicious") return "— spam —";
-  if (item.contact_value) return item.contact_value;
+  const contact = extractContactValue(item.contact_value);
+  if (contact) return contact;
   return "anonymous";
 }
 
@@ -41,9 +60,12 @@ function briefToRows(brief: LeadBrief) {
     { key: "signals", value: brief.signals },
     { key: "score", value: `${brief.quality_score ?? "—"} · ${brief.qualification ?? "—"}` },
   ];
-  if (brief.contact && Object.keys(brief.contact).length > 0) {
-    const contactVal = Object.values(brief.contact)[0] as string;
-    rows.splice(3, 0, { key: "contact", value: contactVal });
+  if (brief.contact) {
+    const contactVal = Object.entries(brief.contact)
+      .filter(([, v]) => v && typeof v === "string")
+      .map(([, v]) => v as string)
+      .join(" · ");
+    if (contactVal) rows.splice(3, 0, { key: "contact", value: contactVal });
   }
   return rows;
 }
@@ -126,10 +148,10 @@ export default function InboxPage() {
 
   // States A & C — split pane
   return (
-    <div className="flex-1 flex overflow-hidden">
+    <div className="flex-1 flex overflow-hidden min-h-0">
       {/* Left pane — session list */}
-      <div className="w-[240px] shrink-0 flex flex-col border-hairline-r overflow-y-auto">
-        <div className="px-[14px] py-[10px] border-hairline-b">
+      <div className="w-[240px] shrink-0 flex flex-col border-hairline-r min-h-0">
+        <div className="px-[14px] py-[10px] border-hairline-b shrink-0">
           <div className="flex items-center gap-2 px-[8px] py-[5px] border-hairline rounded text-[11px] text-text-placeholder bg-background-secondary">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" className="shrink-0">
               <circle cx="4.5" cy="4.5" r="3.5" stroke="#BBB" />
@@ -138,22 +160,24 @@ export default function InboxPage() {
             search
           </div>
         </div>
-        {sessions.map((s) => (
-          <SessionListItem
-            key={s.session_id}
-            name={sessionName(s)}
-            time={relativeTime(s.updated_at)}
-            preview={s.preview}
-            tags={tagsForSession(s)}
-            active={selectedId === s.session_id}
-            onClick={() => selectSession(s.session_id)}
-          />
-        ))}
-        {sessionsData?.next_cursor && (
-          <button className="px-[14px] py-[10px] text-[11px] text-text-muted hover:text-text-body transition-colors border-hairline-t text-center">
-            load older
-          </button>
-        )}
+        <div className="flex-1 overflow-y-auto min-h-0">
+          {sessions.map((s) => (
+            <SessionListItem
+              key={s.session_id}
+              name={sessionName(s)}
+              time={relativeTime(s.updated_at)}
+              preview={s.preview}
+              tags={tagsForSession(s)}
+              active={selectedId === s.session_id}
+              onClick={() => selectSession(s.session_id)}
+            />
+          ))}
+          {sessionsData?.next_cursor && (
+            <button className="px-[14px] py-[10px] text-[11px] text-text-muted hover:text-text-body transition-colors border-hairline-t text-center w-full">
+              load older
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Right pane — session detail */}
@@ -202,8 +226,8 @@ export default function InboxPage() {
                 </div>
                 <div className="flex gap-[10px] text-[12px] py-1">
                   <div className="w-[70px] text-text-muted text-[11px] shrink-0">contact</div>
-                  <div className={session.contact_value ? "text-[#444]" : "text-text-muted"}>
-                    {session.contact_value ?? "not captured"}
+                  <div className={extractContactValue(session.contact_value) ? "text-[#444]" : "text-text-muted"}>
+                    {extractContactValue(session.contact_value) ?? "not captured"}
                   </div>
                 </div>
                 <div className="flex gap-[10px] text-[12px] py-1">
