@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import { apiClient, ApiError } from "@/lib/api/client";
 
 vi.mock("@/lib/env", () => ({
@@ -24,22 +24,7 @@ function mockFetch(status: number, body: unknown, headers: Record<string, string
 }
 
 describe("apiClient", () => {
-  let originalLocation: Location;
-
-  beforeEach(() => {
-    originalLocation = window.location;
-    // jsdom allows re-assigning location for redirect testing
-    Object.defineProperty(window, "location", {
-      writable: true,
-      value: { href: "http://localhost:3000" },
-    });
-  });
-
   afterEach(() => {
-    Object.defineProperty(window, "location", {
-      writable: true,
-      value: originalLocation,
-    });
     vi.restoreAllMocks();
   });
 
@@ -157,16 +142,7 @@ describe("apiClient", () => {
   });
 
   describe("401 handling", () => {
-    it("redirects to /login on 401", async () => {
-      vi.stubGlobal("fetch", mockFetch(401, { error: "unauthenticated" }));
-
-      // suppress the throw
-      await apiClient.get("/api/auth/me").catch(() => {});
-
-      expect(window.location.href).toBe("/login");
-    });
-
-    it("still throws ApiError with status 401 after redirecting", async () => {
+    it("throws ApiError with status 401", async () => {
       vi.stubGlobal("fetch", mockFetch(401, { error: "unauthenticated" }));
 
       await expect(apiClient.get("/api/auth/me")).rejects.toMatchObject({

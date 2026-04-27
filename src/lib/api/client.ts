@@ -39,9 +39,6 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
   });
 
   if (res.status === 401) {
-    if (typeof window !== "undefined") {
-      window.location.href = "/login";
-    }
     throw new ApiError(401, { error: "unauthenticated" });
   }
 
