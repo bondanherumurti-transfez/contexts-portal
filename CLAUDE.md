@@ -52,21 +52,29 @@ src/app/
 ├── login/page.tsx           # wireframe 01 — Google OAuth entry; ?error=auth_failed shows generic banner, ?error=not_invited shows "contact us" banner
 ├── auth/callback/page.tsx   # OAuth landing — verifies cookie, redirects to /inbox
 └── (authenticated)/         # route group with auth guard layout
-    ├── layout.tsx           # sidebar + topbar shell, useCurrentUser guard
-    ├── inbox/page.tsx       # wireframes 02, 08, 09 — split pane
+    ├── layout.tsx           # auth guard (useCurrentUser + useSites) + Sidebar + Topbar shell
+    ├── inbox/page.tsx       # wireframes 02, 08, 09 — split pane (placeholder until PR 5)
     ├── knowledge-base/
-    │   ├── layout.tsx       # tabs strip
-    │   ├── knowledge/       # wireframe 03
-    │   ├── engagement/      # wireframe 04
-    │   └── behavior/        # wireframe 05
-    └── sites/page.tsx       # wireframes 06, 07
+    │   ├── layout.tsx       # tabs strip (knowledge / engagement / behavior)
+    │   ├── page.tsx         # redirects to /knowledge-base/knowledge
+    │   ├── knowledge/       # wireframe 03 (placeholder until PR 6)
+    │   ├── engagement/      # wireframe 04 (placeholder until PR 7)
+    │   └── behavior/        # wireframe 05 (placeholder until PR 7)
+    └── sites/
+        └── page.tsx         # wireframes 06 (stub) + 07 (first-time empty state, fully implemented)
 ```
+
+### Shell components (`src/components/shell/`)
+
+**`Sidebar.tsx`** — takes `hasSites: boolean` prop. When `false`, inbox/KB/analytics are `div` (non-clickable, opacity-50); only Sites is a `<Link>`. Analytics is always disabled regardless of `hasSites`. User section: initials avatar + first name + chevron; clicking opens a dropdown with "sign out" (clears `["user"]` query cache then `router.replace("/login")`).
+
+**`Topbar.tsx`** — takes `sites: Site[]`. Shows `sites[0].url ?? sites[0].name ?? "your sites"` on the left; shows "your sites" when on `/sites` route. Right-side metadata added per-page in later PRs.
 
 ### Auth
 
 Cookie-based, fully managed by the backend. The frontend never reads or stores the `contextus_portal_session` cookie — it just sends `credentials: "include"` on every request.
 
-Auth guard lives in `src/app/(authenticated)/layout.tsx`: calls `useCurrentUser()`, shows a spinner while loading, redirects to `/login` on 401. Do **not** use Next.js `middleware.ts` for auth — it can't read HTTP-only cookies from a different domain.
+Auth guard lives in `src/app/(authenticated)/layout.tsx`: calls `useCurrentUser()` (spinner while loading, redirect on error) and `useSites()` (drives `hasSites` prop on Sidebar). Do **not** use Next.js `middleware.ts` for auth — it can't read HTTP-only cookies from a different domain.
 
 Login flow: `window.location.href = "${API_BASE}/api/auth/google/start"` (full-page redirect, not a fetch).
 
@@ -109,13 +117,13 @@ Save pattern: greeting, pills, custom instructions auto-save on blur (debounced 
 
 ### Design tokens
 
-All tokens come from the widget design guideline and are registered in `tailwind.config.ts`:
+All tokens come from the widget design guideline and are defined in `src/app/globals.css` via Tailwind 4's `@theme` directive (not `tailwind.config.ts`):
 
 **Colors:** `primary` (#000), `background` (#FFF), `background-secondary` (#F0F0F0), `background-tertiary` (#FAFAFA), `border` (#E0E0E0), `text-body` (#222), `text-muted` (#888), `text-placeholder` (#BBB), `visitor-bubble` (#111), `error-bg/text` (#FCEBEB/#A32D2D), `warning-bg/text` (#FAEEDA/#854F0B), `success-bg/text` (#E1F5EE/#0F6E56)
 
 **Fonts:** DM Sans (300/400/500/700) for UI; DM Mono (400/500) for labels, metadata, mono values
 
-**Border:** always `0.5px solid #E0E0E0` — use a custom `border-hairline` Tailwind utility (falls back to 1px where sub-pixel rendering isn't supported)
+**Border:** always `0.5px solid #E0E0E0` — custom `@utility` directives in `globals.css`: `border-hairline` (all sides), `border-hairline-t/b/r/l` (directional)
 
 **Radii:** 4px buttons/inputs, 8px cards, 12px modals
 
@@ -162,10 +170,10 @@ E2E tests (Playwright): one happy-path test per major flow with mocked backend v
 
 ## PR sequencing (from spec)
 
-1. Project setup — Tailwind tokens, fonts, env validation, base layout
-2. Auth shell — login page, callback page, API client, auth guard
-3. Sidebar + topbar shell — nav, user menu, wireframe 07 hardcoded
-4. Sites page — `useSites`, `SiteCard`, embed snippet
+1. ✅ Project setup — Tailwind tokens, fonts, env validation, base layout
+2. ✅ Auth shell — login page, callback page, API client, auth guard
+3. ✅ Sidebar + topbar shell — nav, user menu, `useSites`, wireframe 07
+4. Sites page — full `SiteCard`, embed snippet (stub exists, needs PR 4 backend)
 5. Inbox page — sessions list, conversation detail, empty state
 6. KB tab read-only — profile, enriched knowledge list
 7. KB write surfaces — Add Q&A modal, pills, greeting, custom instructions editors
