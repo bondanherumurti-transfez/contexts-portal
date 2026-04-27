@@ -23,6 +23,8 @@ pnpm lint         # eslint
 pnpm test         # vitest unit tests
 pnpm test:e2e     # playwright e2e tests
 pnpm test:e2e:ui  # playwright with UI
+pnpm storybook    # Storybook dev server (http://localhost:6006)
+pnpm build-storybook  # static Storybook build
 ```
 
 For a single unit test file:
@@ -165,6 +167,20 @@ Validated at boot in `src/lib/env.ts` using zod — fail fast with a clear messa
 Unit tests (vitest): API client 401 behavior, error parsing, mutation invalidation patterns, form validation schemas, components with logic (`Tag` color per qualification, `Snippet` copy, `WidgetPreview` pill rendering). Skip snapshot tests and pure presentational components.
 
 E2E tests (Playwright): one happy-path test per major flow with mocked backend via `page.route`. Stub `/api/auth/me` to simulate authenticated state — no real OAuth in tests.
+
+## Storybook
+
+Storybook 10 (`pnpm storybook`) — visual documentation for reusable components with multiple states.
+
+**Setup:** `.storybook/main.ts` (stories glob, `@storybook/nextjs` framework), `.storybook/preview.ts` (global QueryClientProvider decorator with seeded preview user + empty sites, imports `globals.css`), `.storybook/preview-head.html` (Google Fonts for DM Sans/Mono).
+
+**Rule:** only write stories for components with multiple meaningful visual states (e.g. Spinner sizes, Sidebar with/without sites). Skip page-level layouts and pure structural wrappers.
+
+**Existing stories:**
+- `UI/Spinner` — sm, md, lg sizes
+- `Shell/Sidebar` — with sites (normal), no sites (wireframe 07), active KB, active Sites
+
+**When adding a new story:** use `parameters.nextjs.navigation.pathname` to control the active nav item in Sidebar. The global decorator provides the QueryClientProvider — no need to wrap each story manually.
 
 ---
 
