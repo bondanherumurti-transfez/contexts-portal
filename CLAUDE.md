@@ -76,7 +76,7 @@ Single fetch wrapper used by all API modules. Responsibilities:
 1. Prepend `NEXT_PUBLIC_API_BASE`
 2. Set `credentials: "include"` on every request
 3. Parse JSON response
-4. On 401: redirect to `/login`
+4. On 401: throw `ApiError(401)` — the auth guard handles the redirect
 5. On 4xx/5xx: throw typed `ApiError` with status + parsed body
 
 Per-resource modules (`auth.ts`, `sites.ts`, `sessions.ts`, `kb.ts`) export thin wrappers over the client. All TypeScript types for API shapes live in `src/lib/api/types.ts` — must match the backend's Pydantic schemas.
