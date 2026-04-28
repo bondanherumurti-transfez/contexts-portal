@@ -179,7 +179,7 @@ Unit tests (vitest): API client 401 behavior, error parsing, mutation invalidati
 E2E tests (Playwright): one happy-path test per major flow with mocked backend via `page.route`. Stub `/api/auth/me` and `/api/portal/sites` to simulate authenticated state — no real OAuth in tests.
 
 - `tests/unit/lib/inbox.test.ts` — `relativeTime`, `extractContactValue` (contact JSON parsing)
-- `tests/e2e/inbox.spec.ts` — session list renders, click session → brief panel, no-brief panel, direct URL visit navigation, empty state
+- `tests/e2e/inbox.spec.ts` — session list renders, click session → brief panel, no-brief panel, direct URL visit navigation, empty state, search filtering, load-older pagination
 
 ## Storybook
 
