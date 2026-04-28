@@ -1,17 +1,11 @@
-import { Suspense } from "react";
 import { InboxContent } from "./InboxContent";
-import { Spinner } from "@/components/ui/Spinner";
 
-export default function InboxPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="flex-1 flex items-center justify-center h-full">
-          <Spinner size="md" />
-        </div>
-      }
-    >
-      <InboxContent />
-    </Suspense>
-  );
+// searchParams is a Promise in Next.js 15
+export default async function InboxPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ session?: string }>;
+}) {
+  const { session } = await searchParams;
+  return <InboxContent initialSessionId={session ?? null} />;
 }

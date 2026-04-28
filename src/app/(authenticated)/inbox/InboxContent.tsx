@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSessions } from "@/lib/hooks/useSessions";
 import { useSession } from "@/lib/hooks/useSession";
 import { useSites } from "@/lib/hooks/useSites";
@@ -89,10 +90,11 @@ function formatSessionDate(epochSeconds: number): string {
   });
 }
 
-export function InboxContent() {
+export function InboxContent({ initialSessionId }: { initialSessionId: string | null }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const selectedId = searchParams.get("session");
+  // Local state avoids useSearchParams() and the Suspense unmount-on-navigate bug.
+  // initialSessionId comes from the RSC page (searchParams prop) for direct URL visits.
+  const [selectedId, setSelectedId] = useState<string | null>(initialSessionId);
 
   const { data: sitesData } = useSites();
   const site = sitesData?.sites[0];
@@ -104,6 +106,7 @@ export function InboxContent() {
   const { data: sessionDetail, isLoading: detailLoading } = useSession(selectedId);
 
   function selectSession(session_id: string) {
+    setSelectedId(session_id);
     router.push(`/inbox?session=${session_id}`);
   }
 
