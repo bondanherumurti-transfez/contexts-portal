@@ -79,3 +79,30 @@ export interface SessionDetailResponse {
   session: SessionDetail;
   brief: LeadBrief | null;
 }
+
+export interface EnrichedChunk {
+  id: string;
+  question: string;
+  answer: string;
+  word_count: number;
+}
+
+export interface CompanyProfileKB {
+  name: string | null;
+  industry: string | null;
+  services: string | null;
+  out_of_scope: string | null;
+  summary: string | null;
+  last_crawled_at: number | null;
+  pages_indexed: number | null;
+  gaps?: string[];
+}
+
+export interface KBResponse {
+  kb_id: string;
+  company_profile: CompanyProfileKB | null;
+  enriched_chunks: EnrichedChunk[];
+  pills: string[];
+  greeting: string | null;
+  custom_instructions: string | null;
+}

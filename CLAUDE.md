@@ -72,7 +72,7 @@ src/app/
 
 **`Sidebar.tsx`** — takes `hasSites: boolean` prop. When `false`, inbox/KB/analytics are `div` (non-clickable, opacity-50); only Sites is a `<Link>`. Analytics is always disabled regardless of `hasSites`. User section: initials avatar + first name + chevron; clicking opens a dropdown with "sign out" (clears `["user"]` query cache then `router.replace("/login")`).
 
-**`Topbar.tsx`** — takes `sites: Site[]`. Shows `sites[0].url ?? sites[0].name ?? "your sites"` on the left; shows "your sites" when on `/sites` route. Right-side metadata added per-page in later PRs.
+**`Topbar.tsx`** — takes `sites: Site[]`. Shows `sites[0].url ?? sites[0].name ?? "your sites"` on the left; shows "your sites" when on `/sites` route. On `/knowledge-base/*` routes, shows "last crawled {date} · {N} pages" (from `sites[0]`) on the right in mono.
 
 ### Auth
 
@@ -96,6 +96,8 @@ Single fetch wrapper used by all API modules. Responsibilities:
 5. On 4xx/5xx: throw typed `ApiError` with status + parsed body
 
 Per-resource modules (`auth.ts`, `sites.ts`, `sessions.ts`, `kb.ts`) export thin wrappers over the client. All TypeScript types for API shapes live in `src/lib/api/types.ts` — must match the backend's Pydantic schemas.
+
+**`kb.ts`** — `getKB(kb_id)`, `enrichKB(kb_id, question, answer)`, `updatePills(kb_id, pills)`, `updateGreeting(kb_id, greeting)`, `updateCustomInstructions(kb_id, value)`. All KB mutations take `kb_id` in the body (portal auth pattern).
 
 ### TanStack Query conventions
 
@@ -162,6 +164,12 @@ Validated at boot in `src/lib/env.ts` using zod — fail fast with a clear messa
 
 **Brief data:** `GET /api/portal/sessions/{id}` returns `brief: null` when no brief was generated. The right pane renders the "no brief" panel from wireframe 09 in this case.
 
+**KB tabs:** All three sub-tabs (`/knowledge-base/knowledge|engagement|behavior`) share one `useKB(kb_id)` query (staleTime 5 min, TanStack Query deduplicates). `kb_id` comes from `useSites()[0].kb_id`. Mutations (pills, greeting, custom-instructions) use optimistic updates with rollback.
+
+**Gaps section:** `CompanyProfileKB.gaps` is optional — backend `CompanyProfileResponse` does not include it in the current phase. The gaps section on the knowledge tab is conditionally rendered only when `company_profile?.gaps?.length > 0` and is hidden by default.
+
+**KB write save indicators:** each editable section (`greeting`, `pills`, `custom_instructions`) stores a `savedAt` timestamp after a successful mutation and displays "saved · Xs ago" in `font-mono text-[10px] text-text-muted` next to the section header. Timer ticks via `setInterval` while `savedAt` is set.
+
 ---
 
 ## Testing rules
@@ -179,7 +187,9 @@ Unit tests (vitest): API client 401 behavior, error parsing, mutation invalidati
 E2E tests (Playwright): one happy-path test per major flow with mocked backend via `page.route`. Stub `/api/auth/me` and `/api/portal/sites` to simulate authenticated state — no real OAuth in tests.
 
 - `tests/unit/lib/inbox.test.ts` — `relativeTime`, `extractContactValue` (contact JSON parsing)
+- `tests/unit/lib/kb.test.ts` — all KB API functions (`getKB`, `enrichKB`, `updatePills`, `updateGreeting`, `updateCustomInstructions`), error propagation
 - `tests/e2e/inbox.spec.ts` — session list renders, click session → brief panel, no-brief panel, direct URL visit navigation, empty state, search filtering, load-older pagination
+- `tests/e2e/kb.spec.ts` — knowledge tab (profile, Q&A list, add modal), engagement tab (greeting/pills seed from API, save on blur), behavior tab (examples conditional, reset, warning box), topbar KB metadata
 
 ## Storybook
 
@@ -206,6 +216,7 @@ Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primar
 | `UI/Snippet` | `src/components/ui/Snippet.tsx` | 06, 08 |
 | `UI/KeyValue` | `src/components/ui/KeyValue.tsx` | 03 |
 | `Shell/Sidebar` | `src/components/shell/Sidebar.tsx` | 02–09 |
+| `Shell/Topbar` | `src/components/shell/Topbar.tsx` | 03–09 |
 | `Inbox/SessionListItem` | `src/components/inbox/SessionListItem.tsx` | 02, 09 |
 | `Inbox/TranscriptMessage` | `src/components/inbox/TranscriptMessage.tsx` | 02, 09 |
 | `Inbox/BriefPanel` | `src/components/inbox/BriefPanel.tsx` | 02 |
@@ -227,8 +238,8 @@ Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primar
 3. ✅ Sidebar + topbar shell — nav, user menu, `useSites`, wireframe 07
 4. Sites page — full `SiteCard`, embed snippet (stub exists, needs PR 4 backend)
 5. ✅ Inbox page — sessions list, brief panel, no-brief panel, empty state (wireframes 02, 08, 09)
-6. KB tab read-only — profile, enriched knowledge list
-7. KB write surfaces — Add Q&A modal, pills, greeting, custom instructions editors
+6. ✅ KB tab read-only — profile, enriched knowledge list (implemented as part of PR 6+7 combined)
+7. ✅ KB write surfaces — Add Q&A modal, pills editor, greeting editor, custom instructions editor
 8. Polish — empty/loading/error state audit, accessibility, responsive check
 
 Each PR requires backend PRs to be merged before the corresponding frontend PR can work end-to-end (see `BACKEND-SPEC-PORTAL-V1.md` for backend PR sequencing).
