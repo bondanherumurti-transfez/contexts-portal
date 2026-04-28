@@ -227,6 +227,106 @@ test.describe("Inbox", () => {
     await expect(page.getByText("no lead brief for this conversation")).toBeVisible();
   });
 
+  test("search filters session list client-side", async ({ page }) => {
+    mockAuth(page);
+    page.route("**/api/portal/sessions?**", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(SESSION_LIST),
+      })
+    );
+
+    await page.goto("/inbox");
+    // Both sessions visible initially
+    await expect(page.getByText("do you handle restaurants?")).toBeVisible();
+    await expect(page.getByText("price comparison only")).toBeVisible();
+
+    // Type into search box
+    await page.getByPlaceholder("search").fill("restaurant");
+    await expect(page.getByText("do you handle restaurants?")).toBeVisible();
+    await expect(page.getByText("price comparison only")).not.toBeVisible();
+
+    // Clear search — both back
+    await page.getByPlaceholder("search").fill("");
+    await expect(page.getByText("price comparison only")).toBeVisible();
+  });
+
+  test("search with no results shows 'no results' message", async ({ page }) => {
+    mockAuth(page);
+    page.route("**/api/portal/sessions?**", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(SESSION_LIST),
+      })
+    );
+
+    await page.goto("/inbox");
+    await page.getByPlaceholder("search").fill("zzznomatch");
+    await expect(page.getByText("no results")).toBeVisible();
+  });
+
+  test("load older button fetches next page and appends sessions", async ({ page }) => {
+    mockAuth(page);
+
+    const PAGE_ONE = {
+      sessions: [
+        {
+          session_id: "sess_aaa",
+          created_at: 1777300000,
+          updated_at: 1777300000,
+          message_count: 6,
+          contact_captured: true,
+          contact_value: JSON.stringify({ email: null, phone: "081290570866", whatsapp: null }),
+          preview: "do you handle restaurants?",
+          qualification: "qualified",
+          quality_score: "high",
+          brief_sent: true,
+        },
+      ],
+      next_cursor: "cursor_page2",
+    };
+
+    const PAGE_TWO = {
+      sessions: [
+        {
+          session_id: "sess_ccc",
+          created_at: 1777100000,
+          updated_at: 1777100000,
+          message_count: 2,
+          contact_captured: false,
+          contact_value: null,
+          preview: "older session message",
+          qualification: "unclear",
+          quality_score: null,
+          brief_sent: false,
+        },
+      ],
+      next_cursor: null,
+    };
+
+    let callCount = 0;
+    page.route("**/api/portal/sessions?**", (route) => {
+      callCount++;
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify(callCount === 1 ? PAGE_ONE : PAGE_TWO),
+      });
+    });
+
+    await page.goto("/inbox");
+    await expect(page.getByText("do you handle restaurants?")).toBeVisible();
+    await expect(page.getByRole("button", { name: "load older" })).toBeVisible();
+
+    await page.getByRole("button", { name: "load older" }).click();
+
+    // Second page appended — both sessions visible, button gone
+    await expect(page.getByText("older session message")).toBeVisible();
+    await expect(page.getByRole("button", { name: "load older" })).not.toBeVisible();
+  });
+
   test("shows empty state with embed snippet when no sessions", async ({ page }) => {
     mockAuth(page);
     page.route("**/api/portal/sessions?**", (route) =>

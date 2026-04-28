@@ -95,13 +95,29 @@ export function InboxContent({ initialSessionId }: { initialSessionId: string | 
   // Local state avoids useSearchParams() and the Suspense unmount-on-navigate bug.
   // initialSessionId comes from the RSC page (searchParams prop) for direct URL visits.
   const [selectedId, setSelectedId] = useState<string | null>(initialSessionId);
+  const [search, setSearch] = useState("");
 
   const { data: sitesData } = useSites();
   const site = sitesData?.sites[0];
   const kb_id = site?.kb_id;
 
-  const { data: sessionsData, isLoading: sessionsLoading } = useSessions(kb_id);
-  const sessions = sessionsData?.sessions ?? [];
+  const {
+    data: sessionsData,
+    isLoading: sessionsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useSessions(kb_id);
+  const sessions = sessionsData?.pages.flatMap((p) => p.sessions) ?? [];
+  const filtered = search
+    ? sessions.filter((s) => {
+        const q = search.toLowerCase();
+        return (
+          sessionName(s).toLowerCase().includes(q) ||
+          (s.preview ?? "").toLowerCase().includes(q)
+        );
+      })
+    : sessions;
 
   const { data: sessionDetail, isLoading: detailLoading } = useSession(selectedId);
 
@@ -155,16 +171,22 @@ export function InboxContent({ initialSessionId }: { initialSessionId: string | 
       {/* Left pane — session list */}
       <div className="w-[240px] shrink-0 flex flex-col border-hairline-r min-h-0">
         <div className="px-[14px] py-[10px] border-hairline-b shrink-0">
-          <div className="flex items-center gap-2 px-[8px] py-[5px] border-hairline rounded text-[11px] text-text-placeholder bg-background-secondary">
+          <div className="flex items-center gap-2 px-[8px] py-[5px] border-hairline rounded text-[11px] bg-background-secondary">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" className="shrink-0">
               <circle cx="4.5" cy="4.5" r="3.5" stroke="#BBB" />
               <path d="M7.5 7.5L10 10" stroke="#BBB" strokeLinecap="round" />
             </svg>
-            search
+            <input
+              type="text"
+              placeholder="search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="flex-1 bg-transparent outline-none text-[11px] text-text-body placeholder:text-text-placeholder min-w-0"
+            />
           </div>
         </div>
         <div className="flex-1 overflow-y-auto min-h-0">
-          {sessions.map((s) => (
+          {filtered.map((s) => (
             <SessionListItem
               key={s.session_id}
               name={sessionName(s)}
@@ -175,9 +197,16 @@ export function InboxContent({ initialSessionId }: { initialSessionId: string | 
               onClick={() => selectSession(s.session_id)}
             />
           ))}
-          {sessionsData?.next_cursor && (
-            <button className="px-[14px] py-[10px] text-[11px] text-text-muted hover:text-text-body transition-colors border-hairline-t text-center w-full">
-              load older
+          {filtered.length === 0 && search && (
+            <p className="px-[14px] py-[10px] text-[11px] text-text-muted">no results</p>
+          )}
+          {hasNextPage && !search && (
+            <button
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
+              className="px-[14px] py-[10px] text-[11px] text-text-muted hover:text-text-body transition-colors border-hairline-t text-center w-full disabled:opacity-50"
+            >
+              {isFetchingNextPage ? "loading…" : "load older"}
             </button>
           )}
         </div>
