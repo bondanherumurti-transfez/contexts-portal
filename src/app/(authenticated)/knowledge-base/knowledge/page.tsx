@@ -55,14 +55,8 @@ export default function KnowledgePage() {
     <div className="p-3.5 space-y-5 max-w-[680px]">
       {/* Profile section */}
       <section>
-        <div className="flex items-center justify-between mb-1">
+        <div className="mb-1">
           <div className="text-[13px] font-medium text-primary">profile</div>
-          <a
-            href="mailto:support@getcontextus.dev?subject=Recrawl%20request"
-            className="text-[11px] text-text-muted border-hairline rounded px-2.5 py-[3px] hover:text-text-body transition-colors"
-          >
-            request recrawl
-          </a>
         </div>
         <div className="text-[11px] text-text-muted mb-2">
           extracted from your site. recrawl to refresh after site changes.

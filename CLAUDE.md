@@ -160,7 +160,7 @@ Validated at boot in `src/lib/env.ts` using zod — fail fast with a clear messa
 
 **Analytics tab:** always rendered in sidebar but visually disabled (lower opacity, no click handler) in v1 — it's not a feature flag, just a locked visual state.
 
-**Self-serve recrawl button:** for v1, "request recrawl" on the Knowledge tab is a `mailto:` link or info modal, not an API call. No backend endpoint exists for this.
+**Recrawl:** the "request recrawl" button has been removed from the Knowledge tab in v1. No recrawl UI exists until a backend endpoint is available.
 
 **Brief data:** `GET /api/portal/sessions/{id}` returns `brief: null` when no brief was generated. The right pane renders the "no brief" panel from wireframe 09 in this case.
 
