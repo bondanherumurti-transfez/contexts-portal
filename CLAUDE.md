@@ -236,7 +236,7 @@ Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primar
 1. ✅ Project setup — Tailwind tokens, fonts, env validation, base layout
 2. ✅ Auth shell — login page, callback page, API client, auth guard
 3. ✅ Sidebar + topbar shell — nav, user menu, `useSites`, wireframe 07
-4. Sites page — full `SiteCard`, embed snippet (stub exists, needs PR 4 backend)
+4. ✅ Sites page — full `SiteCard`, embed snippet, "+ add new site" placeholder
 5. ✅ Inbox page — sessions list, brief panel, no-brief panel, empty state (wireframes 02, 08, 09)
 6. ✅ KB tab read-only — profile, enriched knowledge list (implemented as part of PR 6+7 combined)
 7. ✅ KB write surfaces — Add Q&A modal, pills editor, greeting editor, custom instructions editor

@@ -6,6 +6,7 @@ import { useCurrentUser } from "@/lib/hooks/useCurrentUser";
 import { useSites } from "@/lib/hooks/useSites";
 import { logout } from "@/lib/api/auth";
 import { Spinner } from "@/components/ui/Spinner";
+import { SiteCard } from "@/components/sites/SiteCard";
 
 export default function SitesPage() {
   const { data: user } = useCurrentUser();
@@ -65,19 +66,22 @@ export default function SitesPage() {
     );
   }
 
-  // Populated state — full SiteCard implementation comes in PR 4
   return (
     <div className="p-4">
       <p className="text-[13px] font-medium text-text-body mb-4">your sites</p>
-      <div className="flex flex-col gap-3">
-        {sites.map((site) => (
-          <div
-            key={site.kb_id}
-            className="border-hairline rounded-md p-3 bg-background-tertiary text-[12px] text-text-muted"
-          >
-            {site.name ?? site.url ?? site.kb_id}
-          </div>
-        ))}
+      {sites.map((site) => (
+        <SiteCard
+          key={site.kb_id}
+          name={site.name ?? site.url ?? site.kb_id}
+          url={site.url}
+          pagesIndexed={site.pages_indexed}
+          kbId={site.kb_id}
+          pending={site.pages_indexed == null}
+          onManage={() => router.push("/knowledge-base")}
+        />
+      ))}
+      <div className="px-3 py-[9px] border-[0.5px] border-dashed border-[#888] rounded text-[12px] text-text-muted text-center mt-2">
+        + add new site
       </div>
     </div>
   );
