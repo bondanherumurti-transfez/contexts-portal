@@ -37,10 +37,10 @@ export function Topbar({ sites }: TopbarProps) {
       : null;
 
   return (
-    <div className="h-[38px] px-3.5 flex items-center justify-between border-hairline-b text-[12px] text-[#444] shrink-0">
-      <span>{siteLabel}</span>
+    <div className="h-[38px] px-3.5 flex items-center justify-between gap-2 border-hairline-b text-[12px] text-[#444] shrink-0">
+      <span className="min-w-0 truncate">{siteLabel}</span>
       {kbMeta && (
-        <span className="font-mono text-[11px] text-text-muted">{kbMeta}</span>
+        <span className="hidden sm:block font-mono text-[11px] text-text-muted shrink-0">{kbMeta}</span>
       )}
     </div>
   );

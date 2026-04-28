@@ -18,12 +18,12 @@ export default function KnowledgeBaseLayout({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-0.5 px-3.5 border-hairline-b shrink-0 pt-1">
+      <div className="flex gap-0.5 px-2 sm:px-3.5 border-hairline-b shrink-0 pt-1">
         {TABS.map((tab) => (
           <Link
             key={tab.label}
             href={tab.href}
-            className={`px-3 py-[7px] text-[12px] border-b-[1.5px] -mb-px transition-colors ${
+            className={`px-2 sm:px-3 py-[7px] text-[12px] border-b-[1.5px] -mb-px transition-colors ${
               pathname === tab.href
                 ? "text-text-body border-text-body"
                 : "text-text-muted border-transparent hover:text-text-body"

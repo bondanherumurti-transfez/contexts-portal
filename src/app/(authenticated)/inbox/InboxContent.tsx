@@ -169,7 +169,7 @@ export function InboxContent({ initialSessionId }: { initialSessionId: string | 
   return (
     <div className="flex-1 flex overflow-hidden min-h-0">
       {/* Left pane — session list */}
-      <div className="w-[240px] shrink-0 flex flex-col border-hairline-r min-h-0">
+      <div className="w-full sm:w-[240px] sm:shrink-0 flex flex-col border-hairline-r min-h-0">
         <div className="px-[14px] py-[10px] border-hairline-b shrink-0">
           <div className="flex items-center gap-2 px-[8px] py-[5px] border-hairline rounded text-[11px] bg-background-secondary">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" className="shrink-0">
@@ -212,8 +212,8 @@ export function InboxContent({ initialSessionId }: { initialSessionId: string | 
         </div>
       </div>
 
-      {/* Right pane — session detail */}
-      <div className="flex-1 overflow-y-auto p-[16px]">
+      {/* Right pane — session detail; hidden on mobile */}
+      <div className="hidden sm:flex sm:flex-col flex-1 overflow-y-auto p-[16px]">
         {!selectedId && (
           <div className="h-full flex items-center justify-center">
             <p className="text-[12px] text-text-muted">select a conversation</p>

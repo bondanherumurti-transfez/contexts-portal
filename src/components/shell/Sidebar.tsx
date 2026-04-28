@@ -58,7 +58,7 @@ export function Sidebar({ hasSites }: SidebarProps) {
     user?.display_name?.split(" ")[0] ?? user?.email?.split("@")[0] ?? "";
 
   return (
-    <div className="w-[150px] shrink-0 flex flex-col h-full bg-background-secondary border-hairline-r">
+    <div className="w-[120px] sm:w-[150px] shrink-0 flex flex-col h-full bg-background-secondary border-hairline-r">
       <div className="flex flex-col flex-1 gap-4 px-3 py-3.5">
         {/* Logo */}
         <div className="flex items-center gap-2 px-2.5">

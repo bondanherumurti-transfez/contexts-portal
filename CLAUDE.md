@@ -240,6 +240,6 @@ Storybook 10 (`pnpm storybook`, runs at `http://localhost:6006`) is the **primar
 5. ✅ Inbox page — sessions list, brief panel, no-brief panel, empty state (wireframes 02, 08, 09)
 6. ✅ KB tab read-only — profile, enriched knowledge list (implemented as part of PR 6+7 combined)
 7. ✅ KB write surfaces — Add Q&A modal, pills editor, greeting editor, custom instructions editor
-8. Polish — empty/loading/error state audit, accessibility, responsive check
+8. ✅ Polish — mobile responsive pass: sidebar narrows on mobile (120px→150px at sm), topbar kbMeta hidden on mobile, KB tabs tightened to prevent clipping, inbox right pane hidden on mobile (list-only glance view)
 
 Each PR requires backend PRs to be merged before the corresponding frontend PR can work end-to-end (see `BACKEND-SPEC-PORTAL-V1.md` for backend PR sequencing).
