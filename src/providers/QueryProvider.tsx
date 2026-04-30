@@ -12,6 +12,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
       queryCache: new QueryCache({
         onError: (error) => {
           if (error instanceof ApiError && error.status === 401 && !redirecting) {
+            if (window.location.pathname === "/login") return;
             redirecting = true;
             client.clear();
             window.location.replace("/login");

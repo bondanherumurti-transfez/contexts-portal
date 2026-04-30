@@ -51,6 +51,20 @@ describe("QueryProvider — global 401 handler", () => {
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
+  it("does not redirect when already on /login (prevents login page loop)", async () => {
+    vi.stubGlobal("location", { replace: mockReplace, pathname: "/login" });
+
+    const fetchFn = vi.fn().mockRejectedValue(new ApiError(401, { error: "unauthenticated" }));
+
+    renderHook(
+      () => useQuery({ queryKey: ["test-login-401"], queryFn: fetchFn }),
+      { wrapper },
+    );
+
+    await waitFor(() => {});
+    expect(mockReplace).not.toHaveBeenCalled();
+  });
+
   it("redirects only once when multiple queries 401 simultaneously", async () => {
     const fail401 = vi.fn().mockRejectedValue(new ApiError(401, { error: "unauthenticated" }));
 
